@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="member.bean.MemberDTO" alias="memberDTO"/>
+		<typeAlias type="orderlist.bean.OrderlistDTO" alias="orderlistDTO"/>
+		<typeAlias type="review.bean.ReviewDTO" alias="reviewDTO"/>
+		
+		<typeAlias type="owner_orderlist.bean.Owner_orderlistDTO" alias="owner_orderlistDTO"/>
+		<typeAlias type="request.bean.RequestDTO" alias="requestDTO"/>
+		<typeAlias type="ownerMember.bean.OwnerMemberDTO" alias="ownerMemberDTO"/>
+		<typeAlias type="ownermenu.bean.OwnerMenuDTO" alias="ownermenuDTO"/>
+		<typeAlias type="ownersidemenu.bean.OwnerSideMenuDTO" alias="ownersidemenuDTO"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="mybatis/index-mapping.xml" />
+		<mapper resource="mybatis/member-mapping.xml" />
+		<mapper resource="mybatis/orderlist-mapping.xml" />
+		<mapper resource="mybatis/review-mapping.xml" />
+		
+		<mapper resource="mybatis/request-mapping.xml" />
+		<mapper resource="mybatis/ownermember-mapping.xml" />
+		<mapper resource="mybatis/admin-mapping.xml"/>
+		<mapper resource="mybatis/ownermenu-mapping.xml"/>
+		<mapper resource="mybatis/ownersidemenu-mapping.xml"/>
+		<mapper resource="mybatis/owner_orderlist-mapping.xml"/>
+	</mappers>
+</configuration>
+

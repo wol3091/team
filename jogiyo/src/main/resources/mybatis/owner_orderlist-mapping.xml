@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.owner_orderlistMapper">
+
+	<insert id="owner_orderlistInsert" parameterType="owner_orderlistDTO">
+		insert into owner_orderlist values 
+		(#{id},#{phone},#{ceo_seq},#{food},#{total_price},#{delivery_region},#{wish},#{review},#{delivery_count},sysdate,#{owner_check})
+	</insert>
+	
+	
+	<select resultType="owner_orderlistDTO" parameterType="String" id="owner_orderlist">
+		select seq, id, food, total_price, delivery_region, to_char(logtime, 'YY.MM.DD HH24:MI:SS') as logtime, owner_check
+		from  owner_orderlist  where ceo_seq=#{ceo_seq} order by logtime desc
+   </select>
+	
+	<select resultType="owner_orderlistDTO" parameterType="int" id="owner_orderView">
+		select * from  owner_orderlist  where seq=#{seq}
+   </select>
+   
+   <update id="owner_checkUpdate" parameterType="owner_orderlistDTO">
+   		UPDATE owner_orderlist
+		SET owner_check=#{owner_check}
+		WHERE seq = #{seq}
+   </update>   
+   
+   	
+	<select id="owner_order_id_view" parameterType="String" resultType="owner_orderlistDTO"> 
+		SELECT * FROM owner_orderlist where id=#{id} 
+	</select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.reviewMapper">
+
+	<select id="reviewBoardList" parameterType="java.util.Map"  resultType ="reviewDTO">
+		select * from review where ceo_seq = #{ceo_seq}
+		<!-- <![CDATA[select * from 
+		(select rownum rn, tt. * from
+		(select * from review order by logtime desc) tt) 
+		where rn>=#{startNum} and rn<=#{endNum}]]>
+		 -->
+	</select>
+	
+	<select id="getTotalA" resultType="int">
+		SELECT count(*) FROM review
+	</select>
+	
+	<select id="starPoint" resultType="int">
+		SELECT ROUND(SUM(starpoint),1) FROM review
+	</select>
+	
+
+	<insert id="reviewWrite" parameterType="reviewDTO">
+		INSERT INTO review
+		VALUES(review_seq.nextval,#{id},#{nickname},#{ceo_seq},#{ceoOK},#{content},#{ceoContent},#{starpoint},#{image},#{orderlist},sysdate,sysdate)
+	</insert>
+	
+	
+	<select id="allReviewList" parameterType="java.util.Map"  resultType ="reviewDTO">
+		select * from review where ceo_seq = #{ceo_seq} order by logtime desc
+	</select>
+	
+	
+	<select id="nReviewList" parameterType="java.util.Map"  resultType ="reviewDTO">
+		select * from review where ceo_seq = #{ceo_seq}  and ceoOK = 'n' order by logtime desc
+	</select>
+	
+	<update id="owner_answer" parameterType="reviewDTO">
+		<![CDATA[
+			update review set ceoContent = #{ceoContent} ,ceoOK = 'y',logtimCeo = sysdate  where TO_CHAR(logtime + 10/(24*60*60) ,'yyyy-mm-dd hh24:mi:ss') >= #{logtime}  
+			and TO_CHAR(logtime - 10/(24*60*60),'yyyy-mm-dd hh24:mi:ss') <= #{logtime} and id = #{id}
+		]]>
+	</update>
+	
+</mapper>

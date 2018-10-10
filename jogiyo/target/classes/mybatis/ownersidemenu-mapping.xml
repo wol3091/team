@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.ownerSideMenuMapper">
+	
+	
+	<insert id="ownerSideMenuInsert" parameterType="ownersidemenuDTO">
+		INSERT INTO sideMenu(seq,menu_group,menu_explain, menu, price, imgName, soldout) VALUES (#{seq},#{menu_group},#{menu_explain},#{menu},#{price},#{imgName},#{soldout})
+	</insert>
+
+	
+	<select resultType="ownersidemenuDTO" parameterType="String" id="ownerSideMenuList">
+		SELECT * FROM sideMenu where seq=#{seq} 
+	</select>
+	
+	<select resultType="ownersidemenuDTO" parameterType="String" id="sidemenuOther">
+		select menu_group, menu_explain, price, imgName,soldout from sideMenu where menu=#{menu} and seq=#{seq}
+	</select>
+	
+	<update parameterType="ownersidemenuDTO" id="sidesoldoutUpdate">
+		UPDATE sideMenu SET soldout=#{soldout} WHERE menu=#{menu}
+	</update>
+	
+	<delete id="sidemenuDelete" parameterType="java.util.Map">
+		DELETE FROM sideMenu WHERE menu=#{menu} and seq=#{seq}
+	</delete>
+	
+</mapper>
+
+

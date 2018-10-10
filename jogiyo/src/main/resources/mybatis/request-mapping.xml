@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.requestMapper">
+	<!-- 온라인 입점신청 -->
+	<insert id="requestInsert" parameterType="requestDTO">
+		INSERT INTO owner_request (preseq,license_num1,license_num2,license_num3,registration,business_register, 
+				register_name,business_phone1,business_phone2,business_phone3,restaurant_name,restaurant_phone1, 
+				restaurant_phone2,restaurant_phone3,restaurant_address1,restaurant_address2,restaurant_address3, 
+				restaurant_address4,category_menu,delivery_option,yak,somename,access1,temp_close) 
+				VALUES (seq_owner_request.nextval,#{license_num1},#{license_num2},#{license_num3},#{registration},#{business_register},#{register_name},
+				#{business_phone1},#{business_phone2},#{business_phone3},#{restaurant_name},#{restaurant_phone1},#{restaurant_phone2},
+				#{restaurant_phone3},#{restaurant_address1},#{restaurant_address2},#{restaurant_address3},#{restaurant_address4},
+				#{category_menu},#{delivery_option},#{yak},#{somename},#{access1},#{temp_close})
+	</insert>
+	
+	<!-- 회원가입 후 다른 정보 입력 1번만 입력 가능하므로 회원가입에 써놓야함 -->
+	<update id="otherInfoUpdate" parameterType="requestDTO">
+		UPDATE owner_request
+		SET original=#{original},lower_price=#{lower_price},delivery_region=#{delivery_region},money_method=#{money_method},
+		weekday_start_H=#{weekday_start_H},weekday_start_M=#{weekday_start_M},weekday_end_H=#{weekday_end_H},weekday_end_M=#{weekday_end_M},
+		saturday_start_H=#{saturday_start_H},saturday_start_M=#{saturday_start_M},saturday_end_H=#{saturday_end_H},saturday_end_M=#{saturday_end_M},
+		sunday_start_H=#{sunday_start_H},sunday_start_M=#{sunday_start_M},sunday_end_H=#{sunday_end_H},sunday_end_M=#{sunday_end_M},
+		delivery_cost=#{delivery_cost},delivery_time=#{delivery_time}
+		WHERE seq = #{seq}
+	</update>
+	
+	<!-- 주소 변경하기 -->
+	<update id="addressUpdate" parameterType="requestDTO">
+		UPDATE owner_request 
+		SET restaurant_address1=#{restaurant_address1},restaurant_address2=#{restaurant_address2},
+		restaurant_address3=#{restaurant_address3},restaurant_address4=#{restaurant_address4}
+		WHERE seq=#{seq}
+	</update>
+	
+	<!-- 임시운영정지 -->
+	<update id="temp_closeUpdate" parameterType="requestDTO">
+		UPDATE owner_request 
+		SET temp_close=#{temp_close}
+		WHERE seq=#{seq}
+	</update>
+	
+	<!-- 회원인증하기 -->
+	<select id="certification" parameterType="java.util.Map" resultType="String">
+	 	SELECT seq FROM owner_request WHERE license_num1=#{license_num1} and license_num2=#{license_num2} and license_num3=#{license_num3} and business_phone1=#{business_phone1} and business_phone2=#{business_phone2} and business_phone3=#{business_phone3}	
+	</select>	
+	
+	<!-- 모든 곳 -->
+	<select id="requestSelect" parameterType="String" resultType="requestDTO">
+		SELECT * FROM  owner_request WHERE seq=#{seq}
+	</select>
+
+	<!-- 운영정보수정 -->
+   <update id="modify" parameterType="requestDTO">
+      UPDATE owner_request
+      SET restaurant_name=#{restaurant_name},category_menu=#{category_menu},restaurant_phone1=#{restaurant_phone1},restaurant_phone2=#{restaurant_phone2},
+      restaurant_phone3=#{restaurant_phone3},restaurant_address1=#{restaurant_address1},restaurant_address2=#{restaurant_address2},restaurant_address3=#{restaurant_address3},
+      restaurant_address4=#{restaurant_address4},original=#{original} WHERE seq=#{seq}
+   </update>
+   
+   <update id="modify2" parameterType="requestDTO">
+      UPDATE owner_request
+      SET weekday_start_H=#{weekday_start_H},weekday_start_M=#{weekday_start_M},weekday_end_H=#{weekday_end_H},weekday_end_M=#{weekday_end_M},
+      saturday_start_H=#{saturday_start_H},saturday_start_M=#{saturday_start_M},saturday_end_H=#{saturday_end_H},
+       saturday_end_M=#{saturday_end_M},sunday_start_H=#{sunday_start_H}, sunday_start_M=#{sunday_start_M},sunday_end_H=#{sunday_end_H},
+      sunday_end_M=#{sunday_end_M},delivery_time=#{delivery_time},delivery_region=#{delivery_region},delivery_cost=#{delivery_cost},lower_price=#{lower_price} WHERE seq=#{seq}
+   </update>
+	
+	
+	<!--  관리자쪽   -->
+	
+	<!-- 관리자 access수락 seq_list 불러오기 -->
+	<update id="accessUpdate" parameterType="requestDTO">
+		UPDATE owner_request
+		SET access1=#{access1}, seq=#{seq} WHERE preseq=#{preseq}
+	</update>
+	
+	<!-- 관리자 seq부여 -->
+	<update id="seqUpdate" parameterType="requestDTO">
+		UPDATE owner_request
+		SET seq=#{seq} WHERE preseq=#{preseq}
+	</update>
+	
+	<!-- 관리자 accept_list -->
+	<select id="adminAccept" parameterType="String" resultType="requestDTO">
+		SELECT * FROM  owner_request WHERE access1=#{access1}
+	</select>
+	
+	<!-- 관리자 accept_view  -->
+	<select id="adminAccept2" parameterType="int" resultType="requestDTO">
+		SELECT * FROM owner_request WHERE preseq=#{preseq}
+	</select>
+	
+	<!-- 관리자 seq_list -->
+	<select id="seqList" parameterType="java.util.Map" resultType="requestDTO">
+		SELECT * FROM  owner_request WHERE access1=#{access1} and seq=#{seq}
+	</select>
+	
+	<!-- seq 확인 -->
+	<select parameterType="String" id="isExistSeq" resultType="String">
+		SELECT * FROM owner_request WHERE seq=#{seq} 
+	</select>
+	
+	
+	<!-- 합쳤을 때 추가한거 -->
+	<select id="ownerList" parameterType="java.util.Map"  resultType ="requestDTO">
+		select * from owner_request where category_menu like #{category_menu} and delivery_region like #{delivery_region} 
+	</select>
+	
+	<!-- seq 로 사장 정보 확인 -->
+	<select  id="ownerView" parameterType="String" resultType="requestDTO">
+		SELECT * FROM owner_request WHERE seq=#{seq} 
+	</select>
+	
+	
+	<!-- 10_8 sectionTest 정렬때문에 -->
+	
+	<!-- 별점 높은게 위로  -->
+	<select  id="ownerListByStar" parameterType="java.util.Map" resultType="requestDTO">
+		select * from  owner_request,(select CEO_SEQ,round(avg(starpoint),1) as tt from review GROUP BY CEO_SEQ ) 
+		where seq = CEO_SEQ and category_menu like #{category_menu} and delivery_region like #{delivery_region} 
+		order by tt DESC
+	</select>
+	
+	<!-- 최소 금액순 금액 낮은게 위로  -->
+	<select  id="ownerListByPrice" parameterType="java.util.Map" resultType="requestDTO">
+		select * from owner_request where category_menu like #{category_menu} and delivery_region like #{delivery_region} ORDER BY lower_price asc
+	</select>
+	
+	
+	<!--리뷰 많은게 위로  -->
+	<select  id="ownerListByRiview" parameterType="java.util.Map" resultType="requestDTO">
+		select seq,nickname,somename, restaurant_name,lower_price,count(ceo_seq) as tt from 
+		(select * from review, owner_request where review.ceo_seq=owner_request.seq  and category_menu like #{category_menu} and delivery_region like #{delivery_region}) 
+		group by seq,nickname,somename, restaurant_name,lower_price order by tt desc
+	</select>
+	
+	<select id="searchId" parameterType="java.util.Map" resultType="String">
+		SELECT seq FROM owner_request WHERE business_phone1=#{business_phone1} and business_phone2=#{business_phone2} and business_phone3=#{business_phone3}
+	</select>
+	
+
+</mapper>
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.ownerMenuMapper">
+	
+	<insert id="ownerMenuInsert" parameterType="ownermenuDTO">
+		INSERT INTO menu (seq,menu_group,menu_explain, menu, price, imgName, soldout) VALUES (#{seq},#{menu_group},#{menu_explain},#{menu},#{price},#{imgName},#{soldout})
+	</insert>
+	
+	<insert id="ownerMenuAllInsert" parameterType="ownermenuDTO">
+		INSERT INTO menu VALUES (#{seq},#{menu_group},#{menu_explain},#{menu},#{price},#{imgName},#{addmenu},#{addmenu_price},#{soldout})
+	</insert>
+	
+	<select resultType="ownermenuDTO" parameterType="String" id="ownerMainMenuList">
+		select distinct menu_group,menu,price,imgName, soldout,menu_explain from menu where seq =#{seq} 
+	</select>
+	
+	
+	<select resultType="ownermenuDTO" parameterType="String" id="menuOther">
+		select distinct menu_group, menu_explain, price, imgName,soldout from menu where menu=#{menu}
+	</select>
+	
+	
+	<select resultType="ownermenuDTO" parameterType="String" id="ownerAllMenuList">
+		SELECT * FROM menu where seq=#{seq}
+	</select>
+	
+	<update parameterType="ownermenuDTO" id="soldoutUpdate">
+		UPDATE menu SET soldout=#{soldout} WHERE menu=#{menu}
+	</update>
+	
+	<select resultType="ownermenuDTO" parameterType="java.util.Map" id="addMenu">
+		select addmenu, addmenu_price from menu where menu=#{menu} and seq=#{seq} and addmenu is not null 
+	</select>
+	
+</mapper>
+
+
